@@ -40,8 +40,28 @@ async function getBookByIdDB(id: number): Promise<iBook[]> {
   return rows;
 }
 
+async function updateBooksDB(id: number, title: string, author: string, publicationDate: any, genres: string): Promise<iBook[]> {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+  
+      const sql: string = 'UPDATE books SET title = $1, author = $2, publicationDate = $3, genres = $4 WHERE id = $5 RETURNING *';
+      const { rows } = await client.query(sql, [title, author, publicationDate, genres, id]);
+  
+      await client.query('COMMIT');
+  
+      return rows;
+    } catch (error: any) {
+      await client.query('ROLLBACK');
+      return [];
+    } finally {
+      client.release();
+    }
+  }
+
 export { 
     createBooksDB, 
     getAllBooksDB, 
-    getBookByIdDB 
+    getBookByIdDB,
+    updateBooksDB
 };

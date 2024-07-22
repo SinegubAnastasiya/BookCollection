@@ -6,6 +6,7 @@ import {
     createBooks, 
     getAllBooks, 
     getBookById,
+    updateBooks
 } from '../service/books.service';
 
 route.post('/', async (req: Request, res: Response) => {
@@ -36,5 +37,16 @@ route.get('/:id', async (req: Request, res: Response) => {
     buildResponse(res, 404, error.message);
   }
 });
+
+route.put('/:id', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { title, author, publicationDate, genres } = req.body;
+      const data: iBook[] = await updateBooks(id, title, author, publicationDate, genres);
+      buildResponse(res, 200, data);
+    } catch (error: any) {
+      buildResponse(res, 404, error.message);
+    }
+  });
 
 export default route;

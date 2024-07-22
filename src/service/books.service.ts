@@ -3,6 +3,7 @@ import {
     createBooksDB, 
     getAllBooksDB, 
     getBookByIdDB,
+    updateBooksDB
 } from '../repository/books.repository';
 
 async function createBooks(title: string, author: string, publicationDate: any, genres: string): Promise<iBook[]> {
@@ -23,8 +24,15 @@ async function getBookById(id: number): Promise<iBook[]> {
   return data;
 }
 
+async function updateBooks(id: number, title: string, author: string, publicationDate: any, genres: string): Promise<iBook[]> {
+    const data: iBook[] = await updateBooksDB(id, title, author, publicationDate, genres);
+    if (!data.length) throw new Error('Data is not saved');
+    return data;
+  }
+
 export { 
     createBooks, 
     getAllBooks, 
     getBookById,
+    updateBooks
 };
