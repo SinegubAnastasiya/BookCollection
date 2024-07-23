@@ -57,11 +57,31 @@ async function updateBooksDB(id: number, title: string, author: string, publicat
     } finally {
       client.release();
     }
+}
+
+async function deleteBooksDB(id: number): Promise<iBook[]> {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+  
+      const sql: string = 'DELETE FROM books WHERE id = $1 RETURNING *';
+      const { rows } = await client.query(sql, [id]);
+  
+      await client.query('COMMIT');
+  
+      return rows;
+    } catch (error: any) {
+      await client.query('ROLLBACK');
+      return [];
+    } finally {
+      client.release();
+    }
   }
 
 export { 
     createBooksDB, 
     getAllBooksDB, 
     getBookByIdDB,
-    updateBooksDB
+    updateBooksDB,
+    deleteBooksDB
 };

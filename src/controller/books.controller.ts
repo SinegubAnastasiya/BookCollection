@@ -6,7 +6,8 @@ import {
     createBooks, 
     getAllBooks, 
     getBookById,
-    updateBooks
+    updateBooks,
+    deleteBooks
 } from '../service/books.service';
 
 route.post('/', async (req: Request, res: Response) => {
@@ -43,6 +44,16 @@ route.put('/:id', async (req: Request, res: Response) => {
       const { id } = req.params;
       const { title, author, publicationDate, genres } = req.body;
       const data: iBook[] = await updateBooks(id, title, author, publicationDate, genres);
+      buildResponse(res, 200, data);
+    } catch (error: any) {
+      buildResponse(res, 404, error.message);
+    }
+  });
+
+  route.delete('/:id', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const data: iBook[] = await deleteBooks(id);
       buildResponse(res, 200, data);
     } catch (error: any) {
       buildResponse(res, 404, error.message);

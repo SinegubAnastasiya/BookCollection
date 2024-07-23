@@ -3,7 +3,8 @@ import {
     createBooksDB, 
     getAllBooksDB, 
     getBookByIdDB,
-    updateBooksDB
+    updateBooksDB,
+    deleteBooksDB
 } from '../repository/books.repository';
 
 async function createBooks(title: string, author: string, publicationDate: any, genres: string): Promise<iBook[]> {
@@ -28,11 +29,18 @@ async function updateBooks(id: number, title: string, author: string, publicatio
     const data: iBook[] = await updateBooksDB(id, title, author, publicationDate, genres);
     if (!data.length) throw new Error('Data is not saved');
     return data;
+}
+
+async function deleteBooks(id: number): Promise<iBook[]> {
+    const data: iBook[] = await deleteBooksDB(id);
+    if (!data.length) throw new Error('Such data not found');
+    return data;
   }
 
 export { 
     createBooks, 
     getAllBooks, 
     getBookById,
-    updateBooks
+    updateBooks,
+    deleteBooks
 };
